@@ -22,34 +22,28 @@ var email = {
   processQueue: function(body) {
     if (body !== null) {
 
-      if (body.attachment.name !== null && body.attachment.data !== null) {
-        endPoint = '/sendFile';
-        bodyMessage = body.attachment.data;
-      } else {
-        endPoint = '/sendMessage';
-        bodyMessage = body.message.body;
-      }
-
-      if (body.to.isGroup) {
-        bodyRequest = { 'chatId': body.to.target, 'body': bodyMessage, 'filename': body.attachment.name };
-      } else {
-        bodyRequest = { 'phone': body.to.target, 'body': bodyMessage, 'filename': body.attachment.name };
-      }
+      bodyRequest = { 
+        from: { name: body.from.name, email: body.from.target },
+        personalizations: [ { to: [ { email: body.to.target } ] } ],
+        subject: body.message.subject,
+        content: [ { type: 'text/html', value: body.message.body } ]
+      };
 
       return request({
         method: 'POST',
-        url: process.env.WA_URL + endPoint + '?token=' + process.env.WA_TOKEN,
+        url: process.env.EMAIL_URL + '/v3/mail/send',
         body: bodyRequest,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.EMAIL_API_KEY },
+        resolveWithFullResponse: true,
         json: true 
       }).then(function(response) {
-        if (response.sent) {
+        if (response.statusCode===202) {
           return {id: body._id, isSent: true, isError: false, errorMessage: null};
         } else {
-          return {id: body._id, isSent: true, isError: true, errorMessage: response.message};
+          return {id: body._id, isSent: true, isError: true, errorMessage: response.body};
         }
       }).catch(function(error) {
-        return {id: body._id, isSent: true, isError: true, errorMessage: error.message};
+        return {id: body._id, isSent: true, isError: true, errorMessage: error.body};
       });
     } else {
       return {id: null};
@@ -57,7 +51,6 @@ var email = {
   },
 
   updateStatus: function(body) {
-    console.log(body);
     if (body.id !== null) {
       return request({
         method: 'PATCH',
@@ -75,4 +68,4 @@ setInterval(function (){
   .then(email.processQueue)
   .then(email.updateStatus)
   .catch(err => console.log(err));
-}, 5000);
+}, 500);

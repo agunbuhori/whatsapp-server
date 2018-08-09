@@ -57,7 +57,6 @@ var whatsapp = {
   },
 
   updateStatus: function(body) {
-    console.log(body);
     if (body.id !== null) {
       return request({
         method: 'PATCH',
