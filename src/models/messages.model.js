@@ -7,6 +7,10 @@ module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const messages = new Schema({
+    service: {
+      id: { type: String, required: true },
+      name: { type: String, required: true },
+    },
     type: { type: String, enum: ['whatsapp', 'sms', 'email'], default: 'whatsapp' },
     from: {
       isMe: { type: Boolean, default: true },

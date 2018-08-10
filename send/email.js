@@ -7,8 +7,9 @@ var email = {
     return request({
       method: 'GET',
       url: process.env.API_GATEWAY_URL + '/v2/messages',
-      qs: { 'type': 'email', 'status.isSent': false, '$limit': 1 },
+      qs: { 'type': 'email', 'from.isMe': true, 'status.isSent': false, '$limit': 1 },
     }).then(function(response) {
+      console.log(response);
       message = JSON.parse(response);
       if (typeof message.data !== 'undefined' && message.data.length > 0) {
         data = message.data[0];
@@ -20,8 +21,8 @@ var email = {
   },
 
   processQueue: function(body) {
+    console.log(body);
     if (body !== null) {
-
       bodyRequest = { 
         from: { name: body.from.name, email: body.from.target },
         personalizations: [ { to: [ { email: body.to.target } ] } ],

@@ -7,8 +7,9 @@ var whatsapp = {
     return request({
       method: 'GET',
       url: process.env.API_GATEWAY_URL + '/v2/messages',
-      qs: { 'type': 'whatsapp', 'status.isSent': false, '$limit': 1 },
+      qs: { 'type': 'whatsapp', 'from.isMe': true, 'status.isSent': false, '$limit': 1 },
     }).then(function(response) {
+      console.log(response);
       message = JSON.parse(response);
       if (typeof message.data !== 'undefined' && message.data.length > 0) {
         data = message.data[0];
@@ -20,8 +21,8 @@ var whatsapp = {
   },
 
   processQueue: function(body) {
+    console.log(body);
     if (body !== null) {
-
       if (body.attachment.name !== null && body.attachment.data !== null) {
         endPoint = '/sendFile';
         bodyMessage = body.attachment.data;
