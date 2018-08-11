@@ -1,11 +1,12 @@
+require('dotenv').config();
 const assert = require('assert');
 const rp = require('request-promise');
 const url = require('url');
 const app = require('../src/app');
 
-const port = app.get('port') || 3030;
+const port = process.env.APP_PORT || 3030;
 const getUrl = pathname => url.format({
-  hostname: app.get('host') || 'localhost',
+  hostname: process.env.APP_HOST || 'localhost',
   protocol: 'http',
   port,
   pathname
