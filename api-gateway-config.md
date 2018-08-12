@@ -4,14 +4,14 @@ curl -i -X POST \
 --data 'name=v2-messages' \
 --data 'protocol=http' \
 --data 'host=localhost' \
---data 'port=49156' \
+--data 'port=11004' \
 --data 'path=/v2/messages'
 curl -i -X POST \
 --url http://localhost:8001/services \
 --data 'name=v2-whatsapp_callback' \
 --data 'protocol=http' \
 --data 'host=localhost' \
---data 'port=49156' \
+--data 'port=11004' \
 --data 'path=/v2/whatsapp_callback'
 
 curl -i -X POST \
