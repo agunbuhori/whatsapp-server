@@ -14,11 +14,11 @@ function saveToMessages() {
             },
             from: {
               isMe: hook.data.messages[i].fromMe,
-              target: hook.data.messages[i].author,
+              target: hook.data.messages[i].author.replace(/@c.us/gi,''),
               name: hook.data.messages[i].senderName,
             },
             to: {
-              isGroup: false,
+              isGroup: hook.data.messages[i].chatId.includes('-'),
               target: process.env.WA_NUMBER,
               name: 'HSI Center',
             },
@@ -28,6 +28,27 @@ function saveToMessages() {
             }
           })
           .then(result => sendToWebhooks(result));
+        } else {
+          sendToWebhooks({
+            service: {
+              id: 'push_notification',
+              name: 'Push notification',
+            },
+            from: {
+              isMe: hook.data.messages[i].fromMe,
+              target: process.env.WA_NUMBER,
+              name: 'HSI Center',
+            },
+            to: {
+              isGroup: hook.data.messages[i].chatId.includes('-'),
+              target: hook.data.messages[i].chatId.replace(/@c.us/gi,''),
+              name: hook.data.messages[i].senderName,
+            },
+            message: {
+              subject: 'No Subject',
+              body: hook.data.messages[i].body,
+            }
+          });
         }
       }
     }
@@ -36,6 +57,7 @@ function saveToMessages() {
 }
 
 function sendToWebhooks(result) {
+  console.log(result);
   return request({
     method: 'GET',
     url: process.env.API_GATEWAY_URL + '/v2/webhooks',
