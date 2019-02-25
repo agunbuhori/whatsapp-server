@@ -73,9 +73,19 @@ var whatsapp = {
         headers: { 'Content-Type': 'application/json' },
         json: true
       }).then(function(response) {
-        return {id: body._id, isSent: true, isError: false, errorMessage: null};
+        if (typeof response.wanotif.status != undefined && response.wanotif.status=='sent') {
+          return {id: body._id, isSent: true, isError: false, errorMessage: null};
+        } else if (typeof response.wanotif.status != undefined) {
+          return {id: body._id, isSent: true, isError: true, errorMessage: response.wanotif.status};
+        } else {
+          return {id: body._id, isSent: true, isError: true, errorMessage: 'Unknown error'};
+        }
       }).catch(function(error) {
-        return {id: body._id, isSent: true, isError: true, errorMessage: error};
+        if (typeof error.wanotif.status != undefined) {
+          return {id: body._id, isSent: true, isError: true, errorMessage: error.wanotif.status};
+        } else {
+          return {id: body._id, isSent: true, isError: true, errorMessage: 'Unknown error'};
+        }
       });
     } else {
       return {id: null};
