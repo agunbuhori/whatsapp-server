@@ -20,37 +20,62 @@ var whatsapp = {
     });
   },
 
+  // https://eu6.chat-api.com/instance5874
+  // processQueue: function(body) {
+  //   console.log(body);
+  //   if (body !== null) {
+  //     if (body.attachment.name !== null && body.attachment.data !== null) {
+  //       endPoint = '/sendFile';
+  //       bodyMessage = body.attachment.data;
+  //     } else {
+  //       endPoint = '/sendMessage';
+  //       bodyMessage = body.message.body;
+  //     }
+
+  //     if (body.to.isGroup) {
+  //       bodyRequest = { 'chatId': body.to.target, 'body': bodyMessage, 'filename': body.attachment.name };
+  //     } else {
+  //       bodyRequest = { 'phone': body.to.target, 'body': bodyMessage, 'filename': body.attachment.name };
+  //     }
+
+  //     return request({
+  //       method: 'POST',
+  //       url: process.env.WA_URL + endPoint + '?token=' + process.env.WA_TOKEN,
+  //       body: bodyRequest,
+  //       headers: { 'Content-Type': 'application/json' },
+  //       json: true
+  //     }).then(function(response) {
+  //       if (response.sent) {
+  //         return {id: body._id, isSent: true, isError: false, errorMessage: null};
+  //       } else {
+  //         return {id: body._id, isSent: true, isError: true, errorMessage: response.message};
+  //       }
+  //     }).catch(function(error) {
+  //       return {id: body._id, isSent: true, isError: true, errorMessage: error.message};
+  //     });
+  //   } else {
+  //     return {id: null};
+  //   }
+  // },
+
+  // https://api.wanotif.id/v1/send
   processQueue: function(body) {
     console.log(body);
     if (body !== null) {
-      if (body.attachment.name !== null && body.attachment.data !== null) {
-        endPoint = '/sendFile';
-        bodyMessage = body.attachment.data;
-      } else {
-        endPoint = '/sendMessage';
-        bodyMessage = body.message.body;
-      }
 
-      if (body.to.isGroup) {
-        bodyRequest = { 'chatId': body.to.target, 'body': bodyMessage, 'filename': body.attachment.name };
-      } else {
-        bodyRequest = { 'phone': body.to.target, 'body': bodyMessage, 'filename': body.attachment.name };
-      }
+      endPoint = '/send';
+      bodyRequest = { 'Phone': body.to.target, 'Message': bodyMessage, 'Apikey': process.env.WA_TOKEN };
 
       return request({
         method: 'POST',
-        url: process.env.WA_URL + endPoint + '?token=' + process.env.WA_TOKEN,
+        url: process.env.WA_URL + endPoint,
         body: bodyRequest,
         headers: { 'Content-Type': 'application/json' },
-        json: true 
+        json: true
       }).then(function(response) {
-        if (response.sent) {
-          return {id: body._id, isSent: true, isError: false, errorMessage: null};
-        } else {
-          return {id: body._id, isSent: true, isError: true, errorMessage: response.message};
-        }
+        return {id: body._id, isSent: true, isError: false, errorMessage: null};
       }).catch(function(error) {
-        return {id: body._id, isSent: true, isError: true, errorMessage: error.message};
+        return {id: body._id, isSent: true, isError: true, errorMessage: error};
       });
     } else {
       return {id: null};
@@ -64,7 +89,7 @@ var whatsapp = {
         url: process.env.API_GATEWAY_URL + '/v2/messages/' + body.id,
         body: { status: { isSent: body.isSent, isError: body.isError, errorMessage: body.errorMessage } },
         headers: { 'Content-Type': 'application/json' },
-        json: true 
+        json: true
       });
     }
   }
