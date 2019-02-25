@@ -64,7 +64,7 @@ var whatsapp = {
     if (body !== null) {
 
       endPoint = '/send';
-      bodyRequest = { 'Phone': body.to.target, 'Message': bodyMessage, 'Apikey': process.env.WA_TOKEN };
+      bodyRequest = { 'Phone': body.to.target, 'Message': body.message.body, 'Apikey': process.env.WA_TOKEN };
 
       return request({
         method: 'POST',
