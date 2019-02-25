@@ -75,17 +75,11 @@ var whatsapp = {
       }).then(function(response) {
         if (typeof response.wanotif.status != undefined && response.wanotif.status=='sent') {
           return {id: body._id, isSent: true, isError: false, errorMessage: null};
-        } else if (typeof response.wanotif.status != undefined) {
-          return {id: body._id, isSent: true, isError: true, errorMessage: response.wanotif.status};
         } else {
-          return {id: body._id, isSent: true, isError: true, errorMessage: 'Unknown error'};
+          return {id: body._id, isSent: true, isError: true, errorMessage: JSON.stringify(response)};
         }
       }).catch(function(error) {
-        if (typeof error.wanotif.status != undefined) {
-          return {id: body._id, isSent: true, isError: true, errorMessage: error.wanotif.status};
-        } else {
-          return {id: body._id, isSent: true, isError: true, errorMessage: 'Unknown error'};
-        }
+        return {id: body._id, isSent: true, isError: true, errorMessage: JSON.stringify(error)};
       });
     } else {
       return {id: null};
