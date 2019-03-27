@@ -1,30 +1,29 @@
 require('dotenv').config();
 // messages-model.js - A mongoose model
-// 
+//
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const messages = new Schema({
-    service: {
-      id: { type: String, required: true },
-      name: { type: String, required: true },
-    },
+    consumer: { type: String, default: 'registration' },
     type: { type: String, enum: ['whatsapp', 'sms', 'email'], default: 'whatsapp' },
+    isGroup: { type: Boolean, default: false },
     from: {
       isMe: { type: Boolean, default: true },
       target: { type: String, default: process.env.WA_NUMBER },
       name: { type: String, default: process.env.WA_NAME },
     },
     to: {
-      isGroup: { type: Boolean, required: true },
       target: { type: String, required: true },
       name: { type: String, required: true },
     },
     message: {
       subject: { type: String, default: 'No Subject' },
       body: { type: String, required: true },
+      type: { type: String, enum: ['chat', 'audio', 'ptt', 'image', 'video', 'document', 'sticker']},
+      mimeType: { type: String },
     },
     attachment: {
       name: { type: String, default: null },
