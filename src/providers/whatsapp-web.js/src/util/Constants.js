@@ -8,7 +8,8 @@ exports.DefaultOptions = {
     puppeteer: {
         headless: true
     },
-    session: false
+    session: false,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
 }
 
 exports.Status = {
