@@ -41,11 +41,11 @@ class Client extends EventEmitter {
                     localStorage.setItem("WAToken2", session.WAToken2);
             }, this.options.session);
         }
-        
+
         await page.goto(WhatsWebURL);
 
         if(this.options.session) {
-            // Check if session restore was successfull 
+            // Check if session restore was successfull
             try {
                 await page.waitForSelector('._2Uo0Z', {timeout: 5000});
             } catch(err) {
@@ -54,11 +54,11 @@ class Client extends EventEmitter {
                     browser.close();
 
                     return;
-                } 
+                }
 
                 throw err;
             }
-           
+
        } else {
             // Wait for QR Code
             await page.waitForSelector('._1jjYO');
@@ -68,14 +68,14 @@ class Client extends EventEmitter {
             // Wait for code scan
             await page.waitForSelector('._2Uo0Z', {timeout: 0});
        }
-       
+
         await page.evaluate(ExposeStore);
-        
+
         // Get session tokens
         const localStorage = JSON.parse(await page.evaluate(() => {
 			return JSON.stringify(window.localStorage);
         }));
-                
+
         const session = {
             WABrowserId: localStorage.WABrowserId,
             WASecretBundle: localStorage.WASecretBundle,
@@ -87,7 +87,7 @@ class Client extends EventEmitter {
 
         // Check Store Injection
         await page.waitForFunction('window.Store != undefined');
-        
+
         //Load extra serialized props
         const models = [Message];
         for (let model of models) {
@@ -127,7 +127,7 @@ class Client extends EventEmitter {
     /**
      * Send a message to a specific chatId
      * @param {string} chatId
-     * @param {string} message 
+     * @param {string} message
      */
     async sendMessage(chatId, message) {
         await this.pupPage.evaluate((chatId, message) => {
@@ -149,7 +149,7 @@ class Client extends EventEmitter {
 
     /**
      * Get chat instance by ID
-     * @param {string} chatId 
+     * @param {string} chatId
      */
     async getChatById(chatId) {
         let chat = await this.pupPage.evaluate(chatId => {

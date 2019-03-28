@@ -6,10 +6,10 @@ exports.UserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit
 
 exports.DefaultOptions = {
     puppeteer: {
-        headless: true
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
     },
-    session: false,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    session: false
 }
 
 exports.Status = {
