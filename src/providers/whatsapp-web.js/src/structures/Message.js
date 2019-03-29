@@ -35,17 +35,17 @@ class Message extends Base {
     }
 
     /**
-     * Sends a message as a reply. If chatId is specified, it will be sent 
-     * through the specified Chat. If not, it will send the message 
+     * Sends a message as a reply. If chatId is specified, it will be sent
+     * through the specified Chat. If not, it will send the message
      * in the same Chat as the original message was sent.
-     * @param {string} message 
-     * @param {?string} chatId 
+     * @param {string} message
+     * @param {?string} chatId
      */
     async reply(message, chatId) {
         if (!chatId) {
             chatId = this.from;
         }
-        
+
         return await this.client.pupPage.evaluate((chatId, quotedMessageId, message) => {
             let quotedMessage = Store.Msg.get(quotedMessageId);
             if(quotedMessage.canReply()) {
@@ -56,7 +56,7 @@ class Message extends Base {
             } else {
                 throw new Error('This message cannot be replied to.');
             }
-            
+
         }, chatId, this.id._serialized, message);
     }
 

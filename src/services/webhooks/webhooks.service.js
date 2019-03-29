@@ -1,7 +1,7 @@
-// Initializes the `whatsapp_callback` service on path `/v2/whatsapp_callback`
+// Initializes the `webhooks` service on path `/v2/webhooks`
 const createService = require('feathers-mongoose');
-const createModel = require('../../models/whatsapp_callback.model');
-const hooks = require('./whatsapp_callback.hooks');
+const createModel = require('../../models/webhooks.model');
+const hooks = require('./webhooks.hooks');
 
 module.exports = function (app) {
   const Model = createModel(app);
@@ -13,10 +13,10 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  app.use('/v2/whatsapp_callback', createService(options));
+  app.use('/v2/webhooks', createService(options));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('v2/whatsapp_callback');
+  const service = app.service('v2/webhooks');
 
   service.hooks(hooks);
 };
