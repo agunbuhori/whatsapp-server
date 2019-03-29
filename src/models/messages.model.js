@@ -1,33 +1,32 @@
-require('dotenv').config();
+require('dotenv').config()
 // messages-model.js - A mongoose model
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function (app) {
-  const mongooseClient = app.get('mongooseClient');
-  const { Schema } = mongooseClient;
+  const mongooseClient = app.get('mongooseClient')
+  const { Schema } = mongooseClient
   const messages = new Schema({
     consumer: { type: String, default: 'registration' },
     type: { type: String, enum: ['whatsapp', 'sms', 'email'], default: 'whatsapp' },
     isGroup: { type: Boolean, default: false },
+    isInboundMessage: { type: Boolean, default: false },
     from: {
-      isMe: { type: Boolean, default: true },
-      target: { type: String, default: process.env.WA_NUMBER },
-      name: { type: String, default: process.env.WA_NAME },
+      id: { type: String },
+      number: { type: String },
+      name: { type: String },
     },
     to: {
-      target: { type: String, required: true },
-      name: { type: String, required: true },
+      id: { type: String },
+      number: { type: String },
+      name: { type: String },
     },
     message: {
-      subject: { type: String, default: 'No Subject' },
+      type: { type: String },
       body: { type: String, required: true },
-      type: { type: String, enum: ['chat', 'audio', 'ptt', 'image', 'video', 'document', 'sticker']},
       mimeType: { type: String },
-    },
-    attachment: {
-      name: { type: String, default: null },
-      data: { type: String, default: null },
+      caption: { type: String },
+      subject: { type: String },
     },
     status: {
       isSent: { type: Boolean, default: false },
@@ -38,7 +37,7 @@ module.exports = function (app) {
     },
   }, {
     timestamps: true
-  });
+  })
 
-  return mongooseClient.model('messages', messages);
-};
+  return mongooseClient.model('messages', messages)
+}

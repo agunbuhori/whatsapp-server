@@ -3,16 +3,17 @@
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function (app) {
-  const mongooseClient = app.get('mongooseClient');
-  const { Schema } = mongooseClient;
+  const mongooseClient = app.get('mongooseClient')
+  const { Schema } = mongooseClient
   const contacts = new Schema({
     type: { type: String, enum: ['whatsapp', 'sms', 'email'], default: 'whatsapp' },
-    contactId: String,
+    id: String,
     name: String,
-    target: String,
+    number: String,
+    address: String,
   }, {
     timestamps: true
-  });
+  })
 
-  return mongooseClient.model('contacts', contacts);
-};
+  return mongooseClient.model('contacts', contacts)
+}

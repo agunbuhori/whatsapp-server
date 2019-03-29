@@ -14,8 +14,8 @@ module.exports = function (app) {
         queues[i].message = message
         app.service('v2/messages').create({
           service: {
-            id: "broadcast",
-            name: "broadcast",
+            id: 'broadcast',
+            name: 'broadcast',
           },
           to: {
             isGroup: false,
@@ -27,7 +27,7 @@ module.exports = function (app) {
           }
         })
       }
-      return Promise.resolve({message: 'Queued. Thank you.', queues: queues});
+      return Promise.resolve({message: 'Queued. Thank you.', queues: queues})
     }
-  });
+  })
 }

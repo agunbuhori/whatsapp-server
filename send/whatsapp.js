@@ -1,5 +1,5 @@
-require('dotenv').config();
-var request = require('request-promise');
+require('dotenv').config()
+var request = require('request-promise')
 
 var whatsapp = {
 
@@ -9,33 +9,33 @@ var whatsapp = {
       url: process.env.API_GATEWAY_URL + '/v2/messages',
       qs: { 'type': 'whatsapp', 'from.isMe': true, 'status.isSent': false, '$limit': 1 },
     }).then(function(response) {
-      console.log(response);
-      message = JSON.parse(response);
+      console.log(response)
+      message = JSON.parse(response)
       if (typeof message.data !== 'undefined' && message.data.length > 0) {
-        data = message.data[0];
+        data = message.data[0]
       } else {
         data = null
       }
-      return data;
-    });
+      return data
+    })
   },
 
   // https://eu6.chat-api.com/instance5874
   // processQueue: function(body) {
-  //   console.log(body);
+  //   console.log(body)
   //   if (body !== null) {
   //     if (body.attachment.name !== null && body.attachment.data !== null) {
-  //       endPoint = '/sendFile';
-  //       bodyMessage = body.attachment.data;
+  //       endPoint = '/sendFile'
+  //       bodyMessage = body.attachment.data
   //     } else {
-  //       endPoint = '/sendMessage';
-  //       bodyMessage = body.message.body;
+  //       endPoint = '/sendMessage'
+  //       bodyMessage = body.message.body
   //     }
 
   //     if (body.to.isGroup) {
-  //       bodyRequest = { 'chatId': body.to.target, 'body': bodyMessage, 'filename': body.attachment.name };
+  //       bodyRequest = { 'chatId': body.to.target, 'body': bodyMessage, 'filename': body.attachment.name }
   //     } else {
-  //       bodyRequest = { 'phone': body.to.target, 'body': bodyMessage, 'filename': body.attachment.name };
+  //       bodyRequest = { 'phone': body.to.target, 'body': bodyMessage, 'filename': body.attachment.name }
   //     }
 
   //     return request({
@@ -46,25 +46,25 @@ var whatsapp = {
   //       json: true
   //     }).then(function(response) {
   //       if (response.sent) {
-  //         return {id: body._id, isSent: true, isError: false, errorMessage: null};
+  //         return {id: body._id, isSent: true, isError: false, errorMessage: null}
   //       } else {
-  //         return {id: body._id, isSent: true, isError: true, errorMessage: response.message};
+  //         return {id: body._id, isSent: true, isError: true, errorMessage: response.message}
   //       }
   //     }).catch(function(error) {
-  //       return {id: body._id, isSent: true, isError: true, errorMessage: error.message};
-  //     });
+  //       return {id: body._id, isSent: true, isError: true, errorMessage: error.message}
+  //     })
   //   } else {
-  //     return {id: null};
+  //     return {id: null}
   //   }
   // },
 
   // https://api.wanotif.id/v1/send
   processQueue: function(body) {
-    console.log(body);
+    console.log(body)
     if (body !== null) {
 
-      endPoint = '/send';
-      bodyRequest = { 'Phone': body.to.target, 'Message': body.message.body, 'Apikey': process.env.WA_TOKEN };
+      endPoint = '/send'
+      bodyRequest = { 'Phone': body.to.target, 'Message': body.message.body, 'Apikey': process.env.WA_TOKEN }
 
       return request({
         method: 'POST',
@@ -74,15 +74,15 @@ var whatsapp = {
         json: true
       }).then(function(response) {
         if (typeof response.wanotif.status != undefined && response.wanotif.status=='sent') {
-          return {id: body._id, isSent: true, isError: false, errorMessage: null};
+          return {id: body._id, isSent: true, isError: false, errorMessage: null}
         } else {
-          return {id: body._id, isSent: true, isError: true, errorMessage: JSON.stringify(response)};
+          return {id: body._id, isSent: true, isError: true, errorMessage: JSON.stringify(response)}
         }
       }).catch(function(error) {
-        return {id: body._id, isSent: true, isError: true, errorMessage: JSON.stringify(error)};
-      });
+        return {id: body._id, isSent: true, isError: true, errorMessage: JSON.stringify(error)}
+      })
     } else {
-      return {id: null};
+      return {id: null}
     }
   },
 
@@ -94,7 +94,7 @@ var whatsapp = {
         body: { status: { isSent: body.isSent, isError: body.isError, errorMessage: body.errorMessage } },
         headers: { 'Content-Type': 'application/json' },
         json: true
-      });
+      })
     }
   }
 }
@@ -103,5 +103,5 @@ setInterval(function (){
   whatsapp.getQueue()
   .then(whatsapp.processQueue)
   .then(whatsapp.updateStatus)
-  .catch(err => console.log(err));
-}, 5000);
+  .catch(err => console.log(err))
+}, 5000)

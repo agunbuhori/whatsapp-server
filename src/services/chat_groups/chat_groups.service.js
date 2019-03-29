@@ -1,7 +1,7 @@
-// Initializes the `messages` service on path `/v2/messages`
+// Initializes the `chat_groups` service on path `/v2/chat_groups`
 const createService = require('feathers-mongoose')
-const createModel = require('../../models/messages.model')
-const hooks = require('./messages.hooks')
+const createModel = require('../../models/chat_groups.model')
+const hooks = require('./chat_groups.hooks')
 
 module.exports = function (app) {
   const Model = createModel(app)
@@ -13,10 +13,10 @@ module.exports = function (app) {
   }
 
   // Initialize our service with any options it requires
-  app.use('/v2/messages', createService(options))
+  app.use('/v2/chat_groups', createService(options))
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('v2/messages')
+  const service = app.service('v2/chat_groups')
 
   service.hooks(hooks)
 }

@@ -1,5 +1,5 @@
-require('dotenv').config();
-var request = require('request-promise');
+require('dotenv').config()
+var request = require('request-promise')
 
 var email = {
 
@@ -9,26 +9,26 @@ var email = {
       url: process.env.API_GATEWAY_URL + '/v2/messages',
       qs: { 'type': 'email', 'from.isMe': true, 'status.isSent': false, '$limit': 1 },
     }).then(function(response) {
-      console.log(response);
-      message = JSON.parse(response);
+      console.log(response)
+      message = JSON.parse(response)
       if (typeof message.data !== 'undefined' && message.data.length > 0) {
-        data = message.data[0];
+        data = message.data[0]
       } else {
         data = null
       }
-      return data;
-    });
+      return data
+    })
   },
 
   processQueue: function(body) {
-    console.log(body);
+    console.log(body)
     if (body !== null) {
-      bodyRequest = { 
+      bodyRequest = {
         from: { name: body.from.name, email: body.from.target },
         personalizations: [ { to: [ { email: body.to.target } ] } ],
         subject: body.message.subject,
         content: [ { type: 'text/html', value: body.message.body } ]
-      };
+      }
 
       return request({
         method: 'POST',
@@ -36,18 +36,18 @@ var email = {
         body: bodyRequest,
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.EMAIL_API_KEY },
         resolveWithFullResponse: true,
-        json: true 
+        json: true
       }).then(function(response) {
         if (response.statusCode===202) {
-          return {id: body._id, isSent: true, isError: false, errorMessage: null};
+          return {id: body._id, isSent: true, isError: false, errorMessage: null}
         } else {
-          return {id: body._id, isSent: true, isError: true, errorMessage: response.body};
+          return {id: body._id, isSent: true, isError: true, errorMessage: response.body}
         }
       }).catch(function(error) {
-        return {id: body._id, isSent: true, isError: true, errorMessage: error.body};
-      });
+        return {id: body._id, isSent: true, isError: true, errorMessage: error.body}
+      })
     } else {
-      return {id: null};
+      return {id: null}
     }
   },
 
@@ -58,8 +58,8 @@ var email = {
         url: process.env.API_GATEWAY_URL + '/v2/messages/' + body.id,
         body: { status: { isSent: body.isSent, isError: body.isError, errorMessage: body.errorMessage } },
         headers: { 'Content-Type': 'application/json' },
-        json: true 
-      });
+        json: true
+      })
     }
   }
 }
@@ -68,5 +68,5 @@ setInterval(function (){
   email.getQueue()
   .then(email.processQueue)
   .then(email.updateStatus)
-  .catch(err => console.log(err));
-}, 500);
+  .catch(err => console.log(err))
+}, 500)

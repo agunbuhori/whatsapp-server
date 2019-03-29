@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k)
 
 /**
  * Utility methods
@@ -8,7 +8,7 @@ const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 class Util {
 
   constructor() {
-    throw new Error(`The ${this.constructor.name} class may not be instantiated.`);
+    throw new Error(`The ${this.constructor.name} class may not be instantiated.`)
   }
 
   /**
@@ -19,17 +19,17 @@ class Util {
   * @private
   */
   static mergeDefault(def, given) {
-    if (!given) return def;
+    if (!given) return def
     for (const key in def) {
       if (!has(given, key) || given[key] === undefined) {
-        given[key] = def[key];
+        given[key] = def[key]
       } else if (given[key] === Object(given[key])) {
-        given[key] = Util.mergeDefault(def[key], given[key]);
+        given[key] = Util.mergeDefault(def[key], given[key])
       }
     }
 
-    return given;
+    return given
   }
 }
 
-module.exports = Util;
+module.exports = Util
