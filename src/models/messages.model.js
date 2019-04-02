@@ -30,8 +30,6 @@ module.exports = function (app) {
     },
     status: {
       isSent: { type: Boolean, default: false },
-      isDelivered: { type: Boolean, default: false },
-      isCanceled: { type: Boolean, default: false },
       isError: { type: Boolean, default: false },
       errorMessage: String,
     },
