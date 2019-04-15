@@ -2,6 +2,7 @@ const request = require('request-promise')
 const { Client } = require('../../providers/whatsapp-web.js/index')
 const receive = require('./receive')
 const sent = require('./sent')
+const chatGroups = require('./chatGroups')
 
 const client = new Client({puppeteer: {headless: false}})
 // You can use an existing session and avoid scanning a QR code by adding a "session" object to the client options.
@@ -34,4 +35,5 @@ client.on('disconnected', () => {
 module.exports = function (app) {
   receive(client, app)
   sent(client, app)
+  chatGroups(client, app)
 }

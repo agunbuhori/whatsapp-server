@@ -7,7 +7,14 @@ module.exports = function (client, app) {
     let isGroup = (msgFrom[1]==='g.us') ? true : false
     let msgTo = msg.to.split('@')
 
-    if (msgFrom[0]!=='status') {
+    if (isGroup && msg.body.toLowerCase()==='new') {
+      let chatName = client.getChatNameById(msg.from)
+      app.service('v2/chat_groups').create({
+        type: 'whatsapp',
+        groupId: msg.from,
+        name: chatName,
+      }).then(res => console.log(res)).then(err => console.log(err))
+    } else if (msgFrom[0]!=='status') {
       let message = {
         consumer: 'webhooks',
         type: 'whatsapp',

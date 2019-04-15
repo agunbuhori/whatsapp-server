@@ -159,6 +159,92 @@ class Client extends EventEmitter {
     return ChatFactory.create(this, chat)
   }
 
+  /**
+   * Send a message to a specific chatId
+   * @param {string} chatId
+   * @param {string} message
+   */
+  async sendMessageById(chatId, message) {
+    await this.pupPage.evaluate((chatId, message) => {
+      Store.Chat.get(chatId).sendMessage(message)
+    }, chatId, message)
+  }
+
+  /**
+   * Get name by chatId
+   * @param {string} chatId
+   */
+  async getChatNameById(chatId) {
+    let chatName = await this.pupPage.evaluate((chatId) => {
+      return Store.Chat.get(chatId).name
+    }, chatId)
+
+    return chatName
+  }
+
+  /**
+   * Get name by chatId
+   * @param {string} chatId
+   */
+  async getParticipantsById(chatId) {
+    let participants = await this.pupPage.evaluate((chatId) => {
+      return Store.GroupMetadata.get(chatId).participants.serialize()
+    }, chatId)
+
+    return participants
+  }
+
+  /**
+   * Adds a list of participants by ID to the group
+   * @param {string} chatId
+   * @param {Array[string]} participantIds
+   */
+  async addParticipantsById(chatId, participantIds) {
+    let participants = await this.pupPage.evaluate((chatId, participantIds) => {
+      return Store.Wap.addParticipants(chatId, participantIds)
+    }, chatId, participantIds)
+
+    return participants
+  }
+
+  /**
+   * Removes a list of participants by ID to the group
+   * @param {string} chatId
+   * @param {Array[string]} participantIds
+   */
+  async removeParticipantsById(chatId, participantIds) {
+    let participants = await this.pupPage.evaluate((chatId, participantIds) => {
+      return Store.Wap.removeParticipants(chatId, participantIds)
+    }, chatId, participantIds)
+
+    return participants
+  }
+
+  /**
+   * Promotes participants by IDs to admins
+   * @param {string} chatId
+   * @param {Array[string]} participantIds
+   */
+  async promoteParticipantsById(chatId, participantIds) {
+    let participants = await this.pupPage.evaluate((chatId, participantIds) => {
+      return Store.Wap.promoteParticipants(chatId, participantIds)
+    }, chatId, participantIds)
+
+    return participants
+  }
+
+  /**
+   * Demotes participants by IDs from admins
+   * @param {string} chatId
+   * @param {Array[string]} participantIds
+   */
+  async demoteParticipantsById(chatId, participantIds) {
+    let participants = await this.pupPage.evaluate((chatId, participantIds) => {
+      return Store.Wap.demoteParticipants(chatId, participantIds)
+    }, chatId, participantIds)
+
+    return participants
+  }
 }
 
 module.exports = Client
