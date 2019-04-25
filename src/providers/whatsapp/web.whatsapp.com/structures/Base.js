@@ -33,7 +33,6 @@ class Base {
   static get extraFields() {
     return []
   }
-
 }
 
 module.exports = Base

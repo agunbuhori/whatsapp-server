@@ -1,12 +1,11 @@
 'use strict'
 
+require('dotenv').config()
 const EventEmitter = require('events')
 const puppeteer = require('puppeteer')
 const Util = require('./util/Util')
 const { WhatsWebURL, UserAgent, DefaultOptions, Events } = require('./util/Constants')
 const { ExposeStore, LoadExtraProps, LoadCustomSerializers } = require('./util/Injected')
-const ChatFactory = require('./factories/ChatFactory')
-const Chat = require('./structures/Chat')
 const Message = require('./structures/Message')
 
 /**
@@ -136,114 +135,15 @@ class Client extends EventEmitter {
   }
 
   /**
-   * Get all current chat instances
+   * Returns an object with information about the invite code's group
+   * @param {string} inviteCode
    */
-  async getChats() {
-    // let chats = await this.pupPage.evaluate(() => {
-    //     return Store.Chat.serialize()
-    // })
-
-    // return chats.map(chatData => ChatFactory.create(this, chatData))
-    throw new Error('NOT IMPLEMENTED')
-  }
-
-  /**
-   * Get chat instance by ID
-   * @param {string} chatId
-   */
-  async getChatById(chatId) {
-    let chat = await this.pupPage.evaluate(chatId => {
-      return WWebJS.getChat(chatId)
-    }, chatId)
-
-    return ChatFactory.create(this, chat)
-  }
-
-  /**
-   * Send a message to a specific chatId
-   * @param {string} chatId
-   * @param {string} message
-   */
-  async sendMessageById(chatId, message) {
-    await this.pupPage.evaluate((chatId, message) => {
-      Store.Chat.get(chatId).sendMessage(message)
-    }, chatId, message)
-  }
-
-  /**
-   * Get name by chatId
-   * @param {string} chatId
-   */
-  async getChatNameById(chatId) {
-    let chatName = await this.pupPage.evaluate((chatId) => {
-      return Store.Chat.get(chatId).name
-    }, chatId)
-
-    return chatName
-  }
-
-  /**
-   * Get name by chatId
-   * @param {string} chatId
-   */
-  async getParticipantsById(chatId) {
-    let participants = await this.pupPage.evaluate((chatId) => {
-      return Store.GroupMetadata.get(chatId).participants.serialize()
-    }, chatId)
-
-    return participants
-  }
-
-  /**
-   * Adds a list of participants by ID to the group
-   * @param {string} chatId
-   * @param {Array[string]} participantIds
-   */
-  async addParticipantsById(chatId, participantIds) {
-    let participants = await this.pupPage.evaluate((chatId, participantIds) => {
-      return Store.Wap.addParticipants(chatId, participantIds)
-    }, chatId, participantIds)
-
-    return participants
-  }
-
-  /**
-   * Removes a list of participants by ID to the group
-   * @param {string} chatId
-   * @param {Array[string]} participantIds
-   */
-  async removeParticipantsById(chatId, participantIds) {
-    let participants = await this.pupPage.evaluate((chatId, participantIds) => {
-      return Store.Wap.removeParticipants(chatId, participantIds)
-    }, chatId, participantIds)
-
-    return participants
-  }
-
-  /**
-   * Promotes participants by IDs to admins
-   * @param {string} chatId
-   * @param {Array[string]} participantIds
-   */
-  async promoteParticipantsById(chatId, participantIds) {
-    let participants = await this.pupPage.evaluate((chatId, participantIds) => {
-      return Store.Wap.promoteParticipants(chatId, participantIds)
-    }, chatId, participantIds)
-
-    return participants
-  }
-
-  /**
-   * Demotes participants by IDs from admins
-   * @param {string} chatId
-   * @param {Array[string]} participantIds
-   */
-  async demoteParticipantsById(chatId, participantIds) {
-    let participants = await this.pupPage.evaluate((chatId, participantIds) => {
-      return Store.Wap.demoteParticipants(chatId, participantIds)
-    }, chatId, participantIds)
-
-    return participants
+  async callStore(waToken, waCommand) {
+    if (waToken===process.env.WA_TOKEN) {
+      return await this.pupPage.evaluate(waCommand => {
+        return eval(waCommand)
+      }, waCommand)
+    }
   }
 }
 

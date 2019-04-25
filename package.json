@@ -22,6 +22,7 @@
     "test": "npm run eslint && npm run mocha",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
     "start": "node src/",
+    "start:wa": "node src/providers/whatsapp/",
     "mocha": "mocha test/ --recursive --exit"
   },
   "dependencies": {

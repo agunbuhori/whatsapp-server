@@ -21,7 +21,7 @@ module.exports = function (app) {
     description: { type: String },
     creator: {
       id: { type: String },
-      number: { type: String, default: process.env.WA_NUMBER },
+      number: { type: String },
       name: { type: String },
     },
     participants: [participants],

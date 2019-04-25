@@ -1,3 +1,5 @@
+// todo : send webhook for received email
+
 require('dotenv').config()
 var request = require('request-promise')
 
