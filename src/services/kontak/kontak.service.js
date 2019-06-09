@@ -1,5 +1,9 @@
 module.exports = function (app) {
   app.get('/kontak/:type/:division', function(req, res) {
+    let hour = new Date().toLocaleString('en-US', {timeZone: 'Asia/Jakarta', hour: '2-digit', hour12: false})
+    let minute = new Date().toLocaleString('en-US', {timeZone: 'Asia/Jakarta', minute: '2-digit'})
+    let currentTime = parseFloat(hour+'.'+minute)
+
     app.service('v2/message_servers').find({
       query: {
         $sort: {
@@ -7,6 +11,12 @@ module.exports = function (app) {
         },
         $limit: 1,
         isActive: true,
+        onlineAt: {
+          $lte: currentTime
+        },
+        offlineAt: {
+          $gte: currentTime
+        },
         type: req.params.type.toLowerCase(),
         division: req.params.division.toLowerCase(),
       },
@@ -19,7 +29,7 @@ module.exports = function (app) {
           res.redirect('https://wa.me/' + result.number + greetingMessage)
         })
       } else {
-        res.redirect('https://wa.me/123456')
+        res.redirect('https://wa.me/123456?text=' + encodeURIComponent('Mohon maaf, saat ini semua cs sedang tidak aktif'))
       }
     })
   })

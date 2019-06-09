@@ -12,6 +12,8 @@ module.exports = function (app) {
     number: { type: Number, required: true },
     name: { type: String },
     description: { type: String },
+    onlineAt: { type: Number, default: 0 },
+    offlineAt: { type: Number, default: 24 },
     counter: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
   }, {
