@@ -32,5 +32,5 @@ module.exports = function (client, app) {
           })
       }
     })
-  }, 5000)
+  }, 3000)
 }
