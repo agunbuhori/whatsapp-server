@@ -1,8 +1,8 @@
 const request = require('request-promise')
 module.exports = function (client, app) {
-  client.on('message', async msg => {
+
+  client.onMessage(msg => {
     let msgFrom = msg.from.split('@')
-    let msgAuthor = (msg.author) ? msg.author.split('@') : ['']
     let isGroup = (msgFrom[1]==='g.us') ? true : false
     let msgTo = msg.to.split('@')
 
@@ -14,7 +14,7 @@ module.exports = function (client, app) {
         isInboundMessage: true,
         from: {
           id: msg.from,
-          number: (isGroup) ? msgAuthor[0] : msgFrom[0],
+          number: msgFrom[0],
         },
         to: {
           id: msg.to,

@@ -7,46 +7,26 @@ const messages = require('../../services/messages/messages.service.js')
 const webhooks = require('../../services/webhooks/webhooks.service.js')
 const receive = require('./receive')
 const sent = require('./sent')
-const Client = require('./web.whatsapp.com')
+const create = require('./sulla').create;
+const Whatsapp = require('./sulla').Whatsapp;
 
-const client = new Client({puppeteer: {headless: false}})
-client.initialize()
-
-client.on('qr', (qr) => {
-  console.log('QR RECEIVED', qr)
-})
-
-client.on('authenticated', (session) => {
-  console.log('AUTHENTICATED', session)
-})
-
-client.on('auth_failure', msg => {
-  console.error('AUTHENTICATION FAILURE', msg)
-})
-
-client.on('ready', () => {
-  console.log('READY')
-})
-
-client.on('message', async msg => {
-  console.log('MESSAGE RECEIVED', msg)
-})
-
-client.on('disconnected', () => {
-  console.log('Client was logged out')
-})
+create().then(client => start(client));
 
 app.configure(messages)
 app.configure(webhooks)
-receive(client, app)
-sent(client, app)
-app.use('/v2/whatsapp_commands', {
-  create(data, params) {
-    if (data.token && data.command) {
-      return client.callStore(data.token, data.command)
+
+function start(client) {
+  receive(client, app)
+  sent(client, app)
+  app.use('/v2/whatsapp_commands', {
+    create(data, params) {
+      if (data.token && data.command) {
+        return client.callStore(data.token, data.command)
+      }
     }
-  }
-})
+  })
+}
+
 
 app.use(express.notFound())
 app.use(express.errorHandler({ logger }))

@@ -13,7 +13,7 @@ module.exports = function (client, app) {
         let chatId = (typeof messages.data[0].to.id !== 'undefined') ? messages.data[0].to.id : messages.data[0].to.number+'@c.us'
         let body = messages.data[0].message.body
 
-        client.sendMessage(chatId, body)
+        client.sendText(chatId, body)
           .then((m) => {
             app.service('v2/messages').patch(id, {
               status: {
