@@ -14,7 +14,7 @@ Getting up and running is as easy as 1, 2, 3.
 2. Install your dependencies
 
     ```
-    cd path/to/hsi-push-notifications; npm install
+    cd path/to/whatsapp-server; npm install
     ```
 
 3. Start your app
